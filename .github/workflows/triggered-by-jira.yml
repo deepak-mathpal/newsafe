@@ -1,6 +1,7 @@
 name: Triggered by Repo 1 Release
 
 on:
+  workflow_dispatch:
   release:
     types:
       - published
