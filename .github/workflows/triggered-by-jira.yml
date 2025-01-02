@@ -2,7 +2,7 @@ name: Triggered by Repo 1 Release
 
 on:
   repository_dispatch:
-    types: release-published
+    types: [release-published]
 
 jobs:
   deploy:
