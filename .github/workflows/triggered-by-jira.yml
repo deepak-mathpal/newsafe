@@ -14,4 +14,7 @@ jobs:
       - name: Run Deployment
         run: |
           echo "Triggered by Repo 1 release."
-          # Add deployment or other actions here
+          echo "Release Tag: ${{ github.event.client_payload.release_tag }}"
+          echo "Release Name: ${{ github.event.client_payload.release_name }}"
+          echo "Release Description: ${{ github.event.client_payload.release_description }}"
+          echo "Release pre-release: ${{ github.event.client_payload.prerelease }}"
