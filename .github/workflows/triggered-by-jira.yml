@@ -1,27 +1,17 @@
-name: Protected Central Workflow
+name: Triggered by Repo 1 Release
 
 on:
   repository_dispatch:
-    types: [jira-approved]
+    types: [release-published]
 
 jobs:
-  validate-and-process:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-      # - name: Validate Trigger Source
-      #   env:
-      #     JIRA_SECRET: ${{ secrets.JIRA_SECRET }}
-      #   run: |
-      #     if [[ "${{ github.event.client_payload.secret }}" != "$JIRA_SECRET" ]]; then
-      #       echo "Unauthorized trigger attempt. Exiting."
-      #       exit 1
-      #     fi
-      #     echo "Trigger validated successfully."
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      - name: Perform Central Workflow Logic
+      - name: Run Deployment
         run: |
-          echo "Repository: ${{ github.event.client_payload.repository }}"
-          echo "Release Tag: ${{ github.event.client_payload.tag }}"
-          echo "Triggering downstream workflows..."
-      # Add logic to trigger downstream workflows
+          echo "Triggered by Repo 1 release."
+          # Add deployment or other actions here
