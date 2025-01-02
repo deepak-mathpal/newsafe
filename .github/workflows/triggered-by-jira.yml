@@ -2,7 +2,7 @@ name: Triggered by Repo 1 Release
 
 on:
   repository_dispatch:
-    types: webhook
+    types: release-published
 
 jobs:
   deploy:
