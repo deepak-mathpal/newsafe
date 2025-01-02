@@ -1,8 +1,7 @@
 name: Triggered by Repo 1 Release
 
 on:
-  repository_dispatch:
-    types: [release-published]
+  workflow_dispatch:
 
 jobs:
   deploy:
