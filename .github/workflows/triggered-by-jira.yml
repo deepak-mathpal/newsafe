@@ -1,23 +1,19 @@
-name: Triggered by Repo 1 Release
+name: Triggered by Jira Webhook
 
 on:
-  workflow_dispatch:
-  release:
+  repository_dispatch:
     types:
-      - published
+      - jira-event
 
 jobs:
-  deploy:
+  process-jira-event:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - name: Print Jira Payload
+        run: echo "Received Jira event: ${{ github.event.client_payload }}"
 
-      - name: Run Deployment
+      - name: Check Issue Details
         run: |
-          echo "Triggered by Repo 1 release."
-          echo "Release Tag: ${{ github.event.release.tag_name }}"
-          echo "Release Name: ${{ github.event.release.name }}"
-          echo "Release Description: ${{ github.event.release.body }}"
-          echo "Release pre-release: ${{ github.event.release.prerelease }}"
-
+          echo "Issue key: ${{ github.event.client_payload.issue_key }}"
+          echo "Issue status: ${{ github.event.client_payload.status }}"
