@@ -1,23 +1,32 @@
-name: Jira Trigger Workflow
+name: Postman Trigger Workflow
 
 on:
   repository_dispatch:
     types:
-      - postman-event # Match the event type from Jira
+      - on-demand-test # Matches the event_type from the API payload
 
 jobs:
-  process-jira:
+  process-postman:
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Read Payload from Repository Dispatch
+      - name: Process Client Payload
         env:
-          ISSUE_KEY: ${{ github.event.client_payload.issue_key }}
-          STATUS: ${{ github.event.client_payload.status }}
-          SUMMARY: ${{ github.event.client_payload.summary }}
+          UNIT_TEST: ${{ github.event.client_payload.unit }}
+          INTEGRATION_TEST: ${{ github.event.client_payload.integration }}
         run: |
-          echo "Jira Issue Key: $ISSUE_KEY"
-          echo "Issue Status: $STATUS"
-          echo "Issue Summary: $SUMMARY"
+          echo "Unit Test Triggered: $UNIT_TEST"
+          echo "Integration Test Triggered: $INTEGRATION_TEST"
+
+      - name: Run Unit Tests (Conditional)
+        if: env.UNIT_TEST == 'true'
+        run: |
+          echo "Running Unit Tests..."
+
+      - name: Run Integration Tests (Conditional)
+        if: env.INTEGRATION_TEST == 'true'
+        run: |
+          echo "Running Integration Tests..."
