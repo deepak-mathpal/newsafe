@@ -1,19 +1,23 @@
-name: Triggered by Jira Webhook
+name: Jira Trigger Workflow
 
 on:
   repository_dispatch:
     types:
-      - jira-event
+      - jira-event # Match the event type from Jira
 
 jobs:
-  process-jira-event:
+  process-jira:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Print Jira Payload
-        run: echo "Received Jira event: ${{ github.event.client_payload }}"
+      - name: Check out code
+        uses: actions/checkout@v3
 
-      - name: Check Issue Details
+      - name: Read Payload from Repository Dispatch
+        env:
+          ISSUE_KEY: ${{ github.event.client_payload.issue_key }}
+          STATUS: ${{ github.event.client_payload.status }}
+          SUMMARY: ${{ github.event.client_payload.summary }}
         run: |
-          echo "Issue key: ${{ github.event.client_payload.issue_key }}"
-          echo "Issue status: ${{ github.event.client_payload.status }}"
+          echo "Jira Issue Key: $ISSUE_KEY"
+          echo "Issue Status: $STATUS"
+          echo "Issue Summary: $SUMMARY"
