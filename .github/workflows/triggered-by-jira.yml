@@ -4,6 +4,7 @@ on:
   repository_dispatch:
     types:
       - external-trigger
+      - jira-event
 jobs:
   process-jira:
     runs-on: ubuntu-latest
