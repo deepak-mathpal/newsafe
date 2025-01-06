@@ -3,8 +3,7 @@ name: Jira Trigger Workflow
 on:
   repository_dispatch:
     types:
-      - jira-event # Matches the event_type sent from Jira
-
+      - external-trigger
 jobs:
   process-jira:
     runs-on: ubuntu-latest
