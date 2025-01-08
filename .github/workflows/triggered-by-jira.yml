@@ -3,7 +3,7 @@ name: Jira Trigger Workflow
 on:
   repository_dispatch:
     types:
-      - trigger-event
+      - postman-event
 
 
 jobs:
