@@ -1,4 +1,4 @@
-name: Jira Trigger Workflow
+name: on-demand-test
 
 on:
   repository_dispatch:
@@ -15,11 +15,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Read Payload from Repository Dispatch
-        env:
-          JIRA_ID: ${{ github.event.client_payload.jira_id }}
-          SUMMARY: ${{ github.event.client_payload.summary }}
-          ASSIGNEE: ${{ github.event.client_payload.assignee }}
         run: |
-          echo "Jira ID: $JIRA_ID"
-          echo "Summary: $SUMMARY"
-          echo "Assignee: $ASSIGNEE"
+          echo "Jira ID:D"
+          echo "Summary: "
+          echo "Assignee: "
