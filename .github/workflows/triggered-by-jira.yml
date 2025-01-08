@@ -2,8 +2,7 @@ name: Jira Trigger Workflow
 
 on:
   repository_dispatch:
-    types:
-      - postman-event
+
 jobs:
   process-jira:
     runs-on: ubuntu-latest
