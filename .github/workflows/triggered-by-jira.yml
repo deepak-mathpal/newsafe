@@ -1,22 +1,20 @@
-name: Print Inputs Example
+name: Process Release Tag
 
 on:
   workflow_dispatch:
     inputs:
-      name:
-        description: 'release_tag'
+      release_tag:
+        description: 'The release tag passed from another workflow'
         required: true
 
 jobs:
-  print-inputs:
+  process-release:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Print the name input
+      - name: Print the release tag
         run: |
-          echo "TAG: ${{ github.event.inputs.name }}"
-
-
+          echo "Received Release Tag: ${{ github.event.inputs.release_tag }}"
