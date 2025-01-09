@@ -4,13 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       name:
-        description: 'Name of the person'
+        description: 'release_tag'
         required: true
-        
-      home:
-        description: 'Home location'
-        required: true
-        
 
 jobs:
   print-inputs:
@@ -22,8 +17,6 @@ jobs:
 
       - name: Print the name input
         run: |
-          echo "Name: ${{ github.event.inputs.name }}"
+          echo "TAG: ${{ github.event.inputs.name }}"
 
-      - name: Print the home input
-        run: |
-          echo "Home: ${{ github.event.inputs.home }}"
+
