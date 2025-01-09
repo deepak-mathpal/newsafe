@@ -1,6 +1,7 @@
 name: on-demand-test
 
 on:
+  workflow_call:
   workflow_dispatch:
   repository_dispatch:
     types:
