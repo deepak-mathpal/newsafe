@@ -1,24 +1,29 @@
-name: on-demand-test
+name: Print Inputs Example
 
 on:
-  workflow_call:
   workflow_dispatch:
-  repository_dispatch:
-    types:
-      - postman-event
+    inputs:
+      name:
+        description: 'Name of the person'
+        required: true
+        default: 'Mona the Octocat'
+      home:
+        description: 'Home location'
+        required: true
+        default: 'San Francisco, CA'
 
 jobs:
-  process-jira:
+  print-inputs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Read Payload from Repository Dispatch
+      - name: Print the name input
         run: |
-          python -m pip install --upgrade pip
-          pip install requests
-      
-      - name: Execute Python script
-        run: echo "s"
+          echo "Name: ${{ github.event.inputs.name }}"
+
+      - name: Print the home input
+        run: |
+          echo "Home: ${{ github.event.inputs.home }}"
