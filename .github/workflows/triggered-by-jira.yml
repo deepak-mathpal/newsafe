@@ -21,4 +21,4 @@ jobs:
           pip install requests
       
       - name: Execute Python script
-        run: python python_files/create_jira_ticket.py
+        run: echo "s"
