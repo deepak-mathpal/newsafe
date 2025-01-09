@@ -1,6 +1,7 @@
 name: on-demand-test
 
 on:
+  workflow dispatch:
   repository_dispatch:
     types:
       - postman-event
@@ -16,6 +17,10 @@ jobs:
 
       - name: Read Payload from Repository Dispatch
         run: |
-          echo "Jira ID:D"
-          echo "Summary: "
-          echo "Assignee: "
+          python -m pip install --upgrade pip
+          pip install requests
+      
+       - name: Execute Python script
+         run: python python_files/create_jira_ticket.py
+
+          
