@@ -37,7 +37,7 @@ def main():
     # parser.add_argument("--jira_key", help="JIRA API token", required=True)
     # parser.add_argument("--jira_user", help="JIRA username", required=True)
     # args = parser.parse_args()
-    jira_key = "ATATT3xFfGF0t0fuP5NiOz8ZQrmfUSplX9XeY6AzjDHqBl-fOl3Et-EYrWSRNbI3VFrD-jhqgEBW7q5ZtDiZQJyRdZGnkHUmGtSnMgsh2M_CtFTx7Dy8YswhYSqo7u_tjpQvj23HzVU63fDWYogCtswL-TDnhFZ0eotGigRT3foEr0CwgtGgsJE=E80AA246"
+    jira_key = 
     
     jira_user = "deepak.m@safe.security"
     payload_file = "/tmp/jira_ticket_payload.json"
