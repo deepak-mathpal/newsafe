@@ -37,7 +37,7 @@ def main():
     # parser.add_argument("--jira_key", help="JIRA API token", required=True)
     # parser.add_argument("--jira_user", help="JIRA username", required=True)
     # args = parser.parse_args()
-    jira_key = 
+    jira_key = ssas
     
     jira_user = "deepak.m@safe.security"
     payload_file = "/tmp/jira_ticket_payload.json"
