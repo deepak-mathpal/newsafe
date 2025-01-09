@@ -6,11 +6,11 @@ on:
       name:
         description: 'Name of the person'
         required: true
-        default: 'Mona the Octocat'
+        
       home:
         description: 'Home location'
         required: true
-        default: 'San Francisco, CA'
+        
 
 jobs:
   print-inputs:
