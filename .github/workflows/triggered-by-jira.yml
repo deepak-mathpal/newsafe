@@ -18,3 +18,12 @@ jobs:
       - name: Print the release tag
         run: |
           echo "Received Release Tag: ${{ github.event.inputs.release_tag }}"
+
+      - name: Create a JIRA ticket
+        run: |
+          python -m pip install --upgrade pip
+          python python_files/create_jira_ticket.py
+
+          
+   
+  
