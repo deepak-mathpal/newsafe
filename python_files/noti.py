@@ -10,7 +10,7 @@ def main():
     tag = args.tag
     summary_input = args.summary
     
-    if summary_input.startswith("noti"):
+    if tag.startswith("noti"):
         summary = "notification deployment on tag " + tag
     else:
         summary = "service deployment"
