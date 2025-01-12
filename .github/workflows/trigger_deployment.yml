@@ -1,4 +1,4 @@
-name: new
+name: ${{ github.event.client_payload.jira_id }}
 
 on:
   repository_dispatch:
