@@ -7,8 +7,9 @@ def create_jira_ticket(jira_user, jira_key, payload_data):
     print("Creating JIRA ticket")
 
     url = "https://safe-security.atlassian.net/rest/api/3/issue"
-    print(payload)
+    print(payload_data)
     payload = json.dumps(payload_data)
+    print(payload)
     auth_str = f"{jira_user}:{jira_key}"
     b64_auth_str = base64.b64encode(auth_str.encode()).decode()
 
