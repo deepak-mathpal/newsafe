@@ -19,7 +19,7 @@ def create_jira_ticket(jira_user, jira_key, payload_data):
     }
 
     try:
-        response = requests.post(url, headers=headers, data=payload)
+        response = requests.post(url, headers=headers, data=payload_data)
         response.raise_for_status()  # Raise an error for bad status codes
         response_json = response.json()  # Extract JSON content from the response
         print(json.dumps(response_json))  # Print the JSON content
