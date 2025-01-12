@@ -1,0 +1,60 @@
+name: Trigger 2nd Repo Workflow
+
+on:
+  workflow_dispatch:
+  release:
+      types: published
+
+jobs:
+  trigger-2nd-repo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Workflow in 2nd Repo
+        run: |
+          curl -L \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.new }}" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/repos/deepak-mathpal/newsafe/actions/workflows/noti-deploy-workflow.yml/dispatches \
+          -d '{"ref":"main","inputs":{"release_tag":"${{ github.event.release.tag_name }}","release_title":"${{ github.event.release.name }}"}}'
+
+          sleep 10
+     
+      - name: Wait for Workflow Completion
+        id: wait_workflow
+        run: |
+          TARGET_REPO="deepak-mathpal/noti-service-deploy"
+          WORKFLOW_ID="noti-deploy-workflow.yml"
+          POLL_INTERVAL=30
+          MAX_RETRIES=20
+          TOKEN="${{ secrets.new }}"
+
+          retries=0
+          while [ $retries -lt $MAX_RETRIES ]; do
+            echo "Checking workflow status..."
+            response=$(curl -s -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $TOKEN" \
+              "https://api.github.com/repos/$TARGET_REPO/actions/workflows/$WORKFLOW_ID/runs")
+            status=$(echo "$response" | jq -r '.workflow_runs[0].status')
+            conclusion=$(echo "$response" | jq -r '.workflow_runs[0].conclusion')
+
+            echo "Status: $status, Conclusion: $conclusion"
+            if [ "$status" == "completed" ]; then
+              if [ "$conclusion" == "success" ]; then
+                echo "Workflow completed successfully!"
+                exit 0
+              else
+                echo "Workflow failed with conclusion: $conclusion"
+                exit 1
+              fi
+            fi
+
+            echo "Workflow not finished yet. Retrying in $POLL_INTERVAL seconds..."
+            sleep $POLL_INTERVAL
+            retries=$((retries + 1))
+          done
+
+          echo "Workflow did not complete within the timeout."
+          exit 1
