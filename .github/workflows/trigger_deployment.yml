@@ -15,6 +15,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v2
     
     - name: Trigger Workflow in 2nd Repo
       id: trigger_workflow
