@@ -1,7 +1,12 @@
-name: Trigger 2nd Repo Workflow
+name: ${{ github.event.client_payload.release_tag }}
 
 on:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'The release tag passed from another workflow'
+        required: true
+
   release:
       types: published
 
