@@ -63,7 +63,7 @@ def main():
 # }
     payload_data = {
   "fields": {
-    "project": { "id": "10113" },
+    "project": { "id": "10212" },
     "assignee": { "id": "712020:89e17fe4-7635-42c7-bdb7-11ab1f4c7dc8" },
     "summary": "notification deployment on tag noti@1231234512",
     "issuetype": { "id": "10148" },
