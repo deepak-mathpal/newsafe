@@ -1,6 +1,9 @@
 name: ${{ github.event.client_payload.release_tag }}
 
 on:
+  repository_dispatch:
+    types: [jira-event]
+
   workflow_dispatch:
     inputs:
       release_tag:
