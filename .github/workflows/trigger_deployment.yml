@@ -5,10 +5,7 @@ on:
     types: jira-event
 
   workflow_dispatch:
-    inputs:
-      release_tag:
-        description: 'The release tag passed from another workflow'
-        required: true
+   
 
   release:
       types: published
