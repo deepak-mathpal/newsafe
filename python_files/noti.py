@@ -99,7 +99,7 @@ def main():
   }
 }
 
-    print(payload_data)
+    print(json.dumps(payload_data))
 
 
 if __name__ == "__main__":
