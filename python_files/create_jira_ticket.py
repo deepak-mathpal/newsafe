@@ -1,9 +1,7 @@
-
 import requests
 import json
 import argparse
 import base64
-import os
 
 def create_jira_ticket(jira_user, jira_key, payload_data):
     print("Creating JIRA ticket")
@@ -25,37 +23,24 @@ def create_jira_ticket(jira_user, jira_key, payload_data):
         print(json.dumps(response_json))  # Print the JSON content
 
         # Store the response in a file
-        with open('/tmp/try.json', 'w') as file:
-            json.dump(response_json, file, indent=4)
-        print("Response stored in /tmp/try.json")
+        # with open('/tmp/try.json', 'w') as file:
+        #     json.dump(response_json, file, indent=4)
+        # print("Response stored in /tmp/try.json")
 
     except requests.exceptions.RequestException as e:
         print(f"Failed to create JIRA ticket: {e}")
         print(response.text)
 
 def main():
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("--jira_key", help="JIRA API token", required=True)
-    # parser.add_argument("--jira_user", help="JIRA username", required=True)
-    # args = parser.parse_args()
-    jira_key = ""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--payload_data",help="payload of the service", required=True)
+    parser.add_argument("--jira_key", help="JIRA API token", required=True)
+    parser.add_argument("--jira_user", help="JIRA username", required=True)
+    args = parser.parse_args()
+    payload_data = args.payload
+    jira_key = args.jira_key
+    jira_user = args.jira_user
     
-    jira_user = "deepak.m@safe.security"
-    payload_file = "/tmp/jira_ticket_payload.json"
-
-    # Check if the file exists
-    if not os.path.isfile(payload_file):
-        print(f"Payload file {payload_file} does not exist.")
-        return
-
-    # Read the JSON payload from the file
-    try:
-        with open(payload_file, 'r') as file:
-            payload_data = json.load(file)
-    except json.JSONDecodeError as e:
-        print(f"Failed to decode JSON from {payload_file}: {e}")
-        return
-
     create_jira_ticket(jira_user, jira_key, payload_data)
 
 if __name__ == "__main__":
