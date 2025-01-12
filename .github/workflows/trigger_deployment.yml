@@ -52,8 +52,8 @@ jobs:
         TARGET_REPO="deepak-mathpal/noti-service"
         TOKEN="${{ secrets.new }}"
         RUN_ID="${{ steps.trigger_workflow.outputs.run_id }}"
-        POLL_INTERVAL=30
-        MAX_RETRIES=5
+        POLL_INTERVAL=10
+        MAX_RETRIES=50
         retries=0
         while [ $retries -lt $MAX_RETRIES ]; do
           echo "Checking workflow status for run_id: $RUN_ID..."
@@ -82,4 +82,5 @@ jobs:
     - name: update the cr
       run: |
         python -m pip install --upgrade pip
+        echo "${{ github.event.client_payload.jira_id }}"
         python python_files/update_jira_ticket.py --jira_user ${{secrets.jira_user}} --jira_key ${{secrets.jira_key}} --status "complete" --jira_ticket_id "${{ github.event.client_payload.jira_id }}"
