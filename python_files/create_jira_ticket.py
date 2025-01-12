@@ -37,7 +37,7 @@ def main():
     parser.add_argument("--jira_key", help="JIRA API token", required=True)
     parser.add_argument("--jira_user", help="JIRA username", required=True)
     args = parser.parse_args()
-    payload_data = args.payload
+    payload_data = args.payload_data
     jira_key = args.jira_key
     jira_user = args.jira_user
     
