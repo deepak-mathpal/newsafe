@@ -79,4 +79,4 @@ jobs:
     - name: update the cr
       run: |
         python -m pip install --upgrade pip
-        python python_files/update_jira_ticekt.py --jira_user ${{secrets.jira_user}} --jira_key ${{secrets.jira_key}} --status "complete" --jira_ticket_id "${{ github.event.client_payload.jira_id }}"
+        python python_files/update_jira_ticket.py --jira_user ${{secrets.jira_user}} --jira_key ${{secrets.jira_key}} --status "complete" --jira_ticket_id "${{ github.event.client_payload.jira_id }}"
