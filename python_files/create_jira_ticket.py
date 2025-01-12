@@ -40,6 +40,7 @@ def main():
     payload_data = args.payload_data
     jira_key = args.jira_key
     jira_user = args.jira_user
+    print(payload_data)
     
     create_jira_ticket(jira_user, jira_key, payload_data)
 
