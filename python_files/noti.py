@@ -6,10 +6,8 @@ import json
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--tag", help="Path to the JSON file", default="")
-    parser.add_argument("--summary", help="Type of the service", default="")
     args = parser.parse_args()
     tag = args.tag
-    summary_input = args.summary
     
     if tag.startswith("noti"):
         summary = "notification deployment on tag " + tag
