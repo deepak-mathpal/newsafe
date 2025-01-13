@@ -94,7 +94,22 @@ def main():
           ]
         }
       ]
-    }
+    },
+    "customfield_10168": {
+            "type": "doc",
+            "version": 1,
+            "content": [
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "tesplanfind"
+                        }
+                    ]
+                }
+            ]
+        }
   }
 }
 
