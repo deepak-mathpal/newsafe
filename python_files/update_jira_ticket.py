@@ -5,6 +5,8 @@ import base64
 
 
 def create_jira_ticket(jira_user, jira_key, jira_ticket_id, payload_data):
+    print(jira_ticket_id)
+    print(payload_data)
     print("Updating JIRA ticket")
     
     url = f"https://safe-security.atlassian.net/rest/api/3/issue/{jira_ticket_id}/transitions"
