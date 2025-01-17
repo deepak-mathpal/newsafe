@@ -4,7 +4,7 @@ import argparse
 import base64
 
 def create_jira_ticket(jira_user, jira_key, payload_data):
-    print("Creating JIRA ticket")
+
 
     url = "https://safe-security.atlassian.net/rest/api/3/issue"
     
