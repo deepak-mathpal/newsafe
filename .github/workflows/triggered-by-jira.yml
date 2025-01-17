@@ -32,6 +32,8 @@ jobs:
           id_output=$(python python_files/create_jira_ticket.py --payload_data "$output" --jira_user ${{secrets.jira_user}} --jira_key ${{secrets.jira_key}})
           echo "outputtt"
           echo "$id_output"
+          echo '{"id": "136974", "key": "TSISD-39", "self": "https://safe-security.atlassian.net/rest/api/3/issue/136974"}' | jq -r '.id'
+
           id_value=$(echo "$id_output" | jq -r '.id')
           echo "Extracted ID: $value"
 
