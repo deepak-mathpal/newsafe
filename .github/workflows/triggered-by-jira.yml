@@ -24,15 +24,18 @@ jobs:
 
       - name: Create a JIRA payload
         run: |
+          sudo apt-get install -y jq
           python -m pip install --upgrade pip
           output=$(python python_files/noti.py --tag ${{ github.event.inputs.release_tag }})
           echo "Script output: $output"
           echo "::set-output name=json::$output"
+          id_value=$(echo "$output" | jq -r '.id')
+          echo "Extracted ID: $id_value"
           python python_files/create_jira_ticket.py --payload_data "$output" --jira_user ${{secrets.jira_user}} --jira_key ${{secrets.jira_key}}
 
       - name: Add Jira form
         run: |
-          curl --location 'https://safe-security.atlassian.net/gateway/api/proforma/cloudid/78e3fb4c-622b-4458-a9d6-2ab4123710d4/api/2/issues/136558/forms' \
+          curl --location 'https://safe-security.atlassian.net/gateway/api/proforma/cloudid/78e3fb4c-622b-4458-a9d6-2ab4123710d4/api/2/issues/"$id_value"/forms' \
           --header 'accept: application/json' \
           --header 'Content-Type: application/json' \
           --header "Authorization: Basic $(echo -n '${{ secrets.jira_user }}:${{ secrets.jira_key }}' | base64)" \
@@ -42,7 +45,7 @@ jobs:
       
       - name: Update the Jira form
         run: |
-          curl --location --request PUT 'https://safe-security.atlassian.net/gateway/api/proforma/cloudid/78e3fb4c-622b-4458-a9d6-2ab4123710d4/api/2/issues/136880/forms/1' \
+          curl --location --request PUT 'https://safe-security.atlassian.net/gateway/api/proforma/cloudid/78e3fb4c-622b-4458-a9d6-2ab4123710d4/api/2/issues/"$id_value"/forms/1' \
           --header 'accept: application/json' \
           --header 'content-type: application/json' \
           --header "Authorization: Basic $(echo -n '${{ secrets.jira_user }}:${{ secrets.jira_key }}' | base64)" \
