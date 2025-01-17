@@ -29,7 +29,6 @@ jobs:
           output=$(python python_files/noti.py --tag ${{ github.event.inputs.release_tag }})
           echo "Script output: $output"
           echo "::set-output name=json::$output"
-          echo "Extracted ID: $id_value"
           id_output=$(python python_files/create_jira_ticket.py --payload_data "$output" --jira_user ${{secrets.jira_user}} --jira_key ${{secrets.jira_key}})
           id_value=$(echo "$id_output" | jq -r '.id')
           
