@@ -31,7 +31,7 @@ jobs:
           echo "::set-output name=json::$output"
           id_output=$(python python_files/create_jira_ticket.py --payload_data "$output" --jira_user ${{secrets.jira_user}} --jira_key ${{secrets.jira_key}})
           echo "$id_output"
-          id_value=$(echo "$id_output" | jq -r '.id')
+          id_value= "$id_output.id"
           
       - name: Add Jira form
         run: |
