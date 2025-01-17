@@ -36,21 +36,17 @@ jobs:
 
           id_value=$(echo "$id_output" | jq -r '.id')
           echo "Extracted ID: $value"
+          sleep 10
 
           
-      - name: Add Jira form
-        run: |
           echo $id_value
           curl --location 'https://safe-security.atlassian.net/gateway/api/proforma/cloudid/78e3fb4c-622b-4458-a9d6-2ab4123710d4/api/2/issues/"$id_value"/forms' \
           --header 'accept: application/json' \
           --header 'Content-Type: application/json' \
           --header "Authorization: Basic $(echo -n '${{ secrets.jira_user }}:${{ secrets.jira_key }}' | base64)" \
           --data '{"templateFormId":2}'
-      
-      
-      
-      - name: Update the Jira form
-        run: |
+          
+          sleep 10
           curl --location --request PUT 'https://safe-security.atlassian.net/gateway/api/proforma/cloudid/78e3fb4c-622b-4458-a9d6-2ab4123710d4/api/2/issues/"$id_value"/forms/1' \
           --header 'accept: application/json' \
           --header 'content-type: application/json' \
