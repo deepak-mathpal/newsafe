@@ -40,6 +40,7 @@ jobs:
           
       - name: Add Jira form
         run: |
+          echo $id_value
           curl --location 'https://safe-security.atlassian.net/gateway/api/proforma/cloudid/78e3fb4c-622b-4458-a9d6-2ab4123710d4/api/2/issues/"$id_value"/forms' \
           --header 'accept: application/json' \
           --header 'Content-Type: application/json' \
