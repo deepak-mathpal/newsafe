@@ -1,4 +1,4 @@
-name: Deployment on tag:- ${{ github.event.client_payload.jira_id }}"
+name: Deployment on tag:- "${{ github.event.client_payload.jira_id }}"
 
 on:
   repository_dispatch:
