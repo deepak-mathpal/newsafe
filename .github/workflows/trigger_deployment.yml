@@ -1,14 +1,8 @@
-name: New Flow
+name: Deployment on tag:- ${{ github.event.client_payload.jira_id }}"
 
 on:
   repository_dispatch:
     types: jira-event
-
-  workflow_dispatch:
-   
-
-  release:
-      types: published
 
 jobs:
   trigger-2nd-repo:
