@@ -16,6 +16,9 @@ jobs:
     - name: Trigger Service Deployment Workflow
       id: trigger_workflow
       run: |
+        echo github.event.client_payload.jira_id
+        echo github.event.client_payload.tag
+        
         response=$(curl -s -L \
           --fail \
           -X POST \
