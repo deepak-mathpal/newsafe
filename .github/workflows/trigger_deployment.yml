@@ -93,4 +93,4 @@ jobs:
         echo ${{secrets.jira_key}}
         echo "${{ github.event.client_payload.jira_id }}"   
 
-        python python_files/update_jira_ticket.py --jira_user ${{secrets.jira_user}} --jira_key ${{secrets.jira_key}} --jira_ticket_id "${{ github.event.client_payload.jira_id }}" --status "complete" 
+        python python_files/update_jira_ticket.py --jira_user "${{secrets.jira_user}}" --jira_key "${{secrets.jira_key}}" --jira_ticket_id "${{ github.event.client_payload.jira_id }}" --status "complete" 
