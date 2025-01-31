@@ -54,11 +54,46 @@ def main():
     }
     
     transition_id = status_mapping[status]
-    payload_data = {
-        "transition": {
-            "id": transition_id
+    if transition_id == "9152":
+        {
+            "transition": {
+                "id": 9152
+            },
+            "fields": {
+                "resolution": {
+                "name": "Incomplete"
+                }
+            },
+            "update": {
+                "comment": [
+                {
+                    "add": {
+                    "body": {
+                        "type": "doc",
+                        "version": 1,
+                        "content": [
+                        {
+                            "type": "paragraph",
+                            "content": [
+                            {
+                                "type": "text",
+                                "text": "Deployment has been failed. Please check the logs and try again."
+                            }
+                            ]
+                        }
+                        ]
+                    }
+                    }
+                }
+                ]
             }
-        }
+            }
+    else:
+        payload_data = {
+            "transition": {
+                "id": transition_id
+                }
+            }
 
     create_jira_ticket(jira_user, jira_key, jira_ticket_id, payload_data)
 
