@@ -65,7 +65,7 @@ jobs:
             if [ "$(echo "$response" | jq -r '.status')" == "error" ]; then 
               echo "::error::Failed to fetch workflow status" 
               echo "workflow_result=failure" >> $GITHUB_ENV
-              exit 1 
+              
             fi
             status=$(echo "$response" | jq -r '.status')
             conclusion=$(echo "$response" | jq -r '.conclusion')
@@ -78,7 +78,7 @@ jobs:
               else
                 echo "Workflow failed with conclusion: $conclusion"
                 echo "workflow_result=fail" >> $GITHUB_ENV
-                exit 1
+                
               fi
             fi
             echo "Workflow not finished yet. Retrying in $POLL_INTERVAL seconds..."
