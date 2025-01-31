@@ -52,38 +52,43 @@ jobs:
       id: wait_workflow
       run: |
         TARGET_REPO="deepak-mathpal/noti-service"
-        TOKEN="${{ secrets.new }}"
-        RUN_ID="${{ steps.trigger_workflow.outputs.run_id }}"
-        POLL_INTERVAL=10
-        MAX_RETRIES=50
-        retries=0
-        while [ $retries -lt $MAX_RETRIES ]; do
-          echo "Checking workflow status for run_id: $RUN_ID..."
-          response=$(curl -s -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer $TOKEN" \
-            "https://api.github.com/repos/$TARGET_REPO/actions/runs/$RUN_ID")
-          if [ "$(echo "$response" | jq -r '.status')" == "error" ]; then 
-            echo "::error::Failed to fetch workflow status" 
+          TOKEN="${{ secrets.new }}"
+          RUN_ID="${{ steps.trigger_workflow.outputs.run_id }}"
+          POLL_INTERVAL=10
+          MAX_RETRIES=50
+          retries=0
+          while [ $retries -lt $MAX_RETRIES ]; do
+            echo "Checking workflow status for run_id: $RUN_ID..."
+            response=$(curl -s -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $TOKEN" \
+              "https://api.github.com/repos/$TARGET_REPO/actions/runs/$RUN_ID")
+            if [ "$(echo "$response" | jq -r '.status')" == "error" ]; then 
+              echo "::error::Failed to fetch workflow status" 
+              echo "workflow_result=failure" >> $GITHUB_ENV
               exit 1 
-          fi
-          status=$(echo "$response" | jq -r '.status')
-          conclusion=$(echo "$response" | jq -r '.conclusion')
-          echo "Status: $status, Conclusion: $conclusion"
-          if [ "$status" == "completed" ]; then
-            if [ "$conclusion" == "success" ]; then
-              echo "Workflow completed successfully!"
-              exit 0
-            else
-              echo "Workflow failed with conclusion: $conclusion"
-              exit 1
             fi
-          fi
-          echo "Workflow not finished yet. Retrying in $POLL_INTERVAL seconds..."
-          sleep $POLL_INTERVAL
-          retries=$((retries + 1))
-        done
-        echo "Workflow did not complete within the timeout."
-        exit 1
+            status=$(echo "$response" | jq -r '.status')
+            conclusion=$(echo "$response" | jq -r '.conclusion')
+            echo "Status: $status, Conclusion: $conclusion"
+            if [ "$status" == "completed" ]; then
+              if [ "$conclusion" == "success" ]; then
+                echo "Workflow completed successfully!"
+                echo "workflow_result=success" >> $GITHUB_ENV
+                exit 0
+              else
+                echo "Workflow failed with conclusion: $conclusion"
+                echo "workflow_result=failure" >> $GITHUB_ENV
+                exit 1
+              fi
+            fi
+            echo "Workflow not finished yet. Retrying in $POLL_INTERVAL seconds..."
+            sleep $POLL_INTERVAL
+            retries=$((retries + 1))
+          done
+          echo "Workflow did not complete within the timeout."
+          echo "workflow_result=failure" >> $GITHUB_ENV
+          exit 1
+
 
     - name: update the cr
       run: |
@@ -93,4 +98,4 @@ jobs:
         echo ${{secrets.jira_key}}
         echo "${{ github.event.client_payload.jira_id }}"   
 
-        python python_files/update_jira_ticket.py --jira_user "${{secrets.jira_user}}" --jira_key "${{secrets.jira_key}}" --jira_ticket_id "${{ github.event.client_payload.jira_id }}" --status "complete" 
+        python python_files/update_jira_ticket.py --jira_user "${{secrets.jira_user}}" --jira_key "${{secrets.jira_key}}" --jira_ticket_id "${{ github.event.client_payload.jira_id }}" --status "${{ env.workflow_result }}" 
