@@ -68,7 +68,7 @@ jobs:
         
             if [ -z "$response" ] || [ "$(echo "$response" | jq -r '.status')" == "error" ]; then
                 echo "::error:: Failed to fetch workflow status"
-                echo "workflow_result=failure" >> $GITHUB_ENV
+                echo "workflow_result=fail" >> $GITHUB_ENV
                 break
             fi
         
@@ -80,10 +80,10 @@ jobs:
             if [ "$status" == "completed" ]; then
                 if [ "$conclusion" == "success" ]; then
                     echo "✅ Workflow completed successfully!"
-                    echo "workflow_result=success" >> $GITHUB_ENV
+                    echo "workflow_result=complete" >> $GITHUB_ENV
                 else
                     echo "⚠️ Workflow failed with conclusion: $conclusion"
-                    echo "workflow_result=failure" >> $GITHUB_ENV
+                    echo "workflow_result=fail" >> $GITHUB_ENV
                 fi
                 break
             fi
