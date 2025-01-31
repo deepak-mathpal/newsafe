@@ -55,7 +55,7 @@ def main():
     
     transition_id = status_mapping[status]
     if transition_id == "9152":
-        {
+        payload_data = {
             "transition": {
                 "id": 9152
             },
