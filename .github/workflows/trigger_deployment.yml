@@ -73,11 +73,11 @@ jobs:
             if [ "$status" == "completed" ]; then
               if [ "$conclusion" == "success" ]; then
                 echo "Workflow completed successfully!"
-                echo "workflow_result=success" >> $GITHUB_ENV
+                echo "workflow_result=complete" >> $GITHUB_ENV
                 exit 0
               else
                 echo "Workflow failed with conclusion: $conclusion"
-                echo "workflow_result=failure" >> $GITHUB_ENV
+                echo "workflow_result=fail" >> $GITHUB_ENV
                 exit 1
               fi
             fi
