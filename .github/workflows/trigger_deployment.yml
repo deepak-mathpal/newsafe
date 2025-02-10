@@ -1,6 +1,5 @@
 name: Trigger Deployment Workflow
 on:
-  workflow_dispatch:
   repository_dispatch:
     types: jira-event
    
