@@ -15,7 +15,7 @@ jobs:
 
       - name: Print the release tag
         run: |
-          echo "Received Release Tag: ${{ github.event.release.tag_name }}"
+          echo "Received Release Tag: ${{ github.event.release.body }}"
 
       - name: Create a JIRA payload
         run: |
