@@ -26,7 +26,7 @@ jobs:
 
       - name: Create a JIRA payload
         run: |
-          echo ${{ github.event.inputs.release_tag }})
+          echo ${{ github.event.inputs.release_tag }}
           sudo apt-get install -y jq
           python -m pip install --upgrade pip
           output=$(python python_files/noti.py --tag ${{ github.event.inputs.release_tag }})
