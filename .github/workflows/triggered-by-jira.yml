@@ -1,55 +1,26 @@
-name: Process Release Tag
+name: Print Value in Job Summary and Outputs
 
 on:
-  release:
-    types: published
-  workflow_dispatch:
+  workflow_dispatch
 
 jobs:
-  process-release:
+  generate_value:
     runs-on: ubuntu-latest
-
+    outputs:
+      my_value: ${{ steps.store_value.outputs.value }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Generate Value
+        id: store_value
+        run: echo "value=Generated Output Value" >> $GITHUB_OUTPUT
 
-      - name: Print the release tag
+      - name: Print to Job Summary
         run: |
-          echo "Received Release Tag: ${{ github.event.release.body }}"
+          echo "### 🔥 Important Output 🔥" >> $GITHUB_STEP_SUMMARY
+          echo "**Value:** ${{ steps.store_value.outputs.value }}" >> $GITHUB_STEP_SUMMARY
 
-      - name: Create a JIRA payload
-        run: |
-          echo ${{ github.event.inputs.release_tag }}
-          # sudo apt-get install -y jq
-          # python -m pip install --upgrade pip
-          # output=$(python python_files/noti.py --tag ${{ github.event.inputs.release_tag }})
-          # echo "Script output: $output"
-          # echo "::set-output name=json::$output"
-          # id_output=$(python python_files/create_jira_ticket.py --payload_data "$output" --jira_user ${{secrets.jira_user}} --jira_key ${{secrets.jira_key}})
-          # echo "outputtt"
-          # echo "$id_output"
-          # echo '{"id": "136974", "key": "TSISD-39", "self": "https://safe-security.atlassian.net/rest/api/3/issue/136974"}' | jq -r '.id'
-          # id_value=$(echo "$id_output" | jq -r '.id')
-          # echo "Extracted ID: $value"
-          # sleep 10
-          # echo $id_value
-          # curl --location 'https://safe-security.atlassian.net/gateway/api/proforma/cloudid/78e3fb4c-622b-4458-a9d6-2ab4123710d4/api/2/issues/"$id_value"/forms' \
-          # --header 'accept: application/json' \
-          # --header 'Content-Type: application/json' \
-          # --header "Authorization: Basic $(echo -n '${{ secrets.jira_user }}:${{ secrets.jira_key }}' | base64)" \
-          # --data '{"templateFormId":2}'
-          # sleep 10
-          # curl --location --request PUT 'https://safe-security.atlassian.net/gateway/api/proforma/cloudid/78e3fb4c-622b-4458-a9d6-2ab4123710d4/api/2/issues/"$id_value"/forms/1' \
-          # --header 'accept: application/json' \
-          # --header 'content-type: application/json' \
-          # --header "Authorization: Basic $(echo -n '${{ secrets.jira_user }}:${{ secrets.jira_key }}' | base64)" \
-          # --data '{"1":{"text":"","choices":["1"]},"2":{"text":"dsde"}}'
-                    
-
-          
-
-       
-
-          
-   
-  
+  use_value:
+    runs-on: ubuntu-latest
+    needs: generate_value
+    steps:
+      - name: Print Output from Previous Job
+        run: echo "The value is: ${{ needs.generate_value.outputs.my_value }}"
