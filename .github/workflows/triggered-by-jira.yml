@@ -1,26 +1,20 @@
-name: Print Value in Job Summary and Outputs
+name: Print Release Details
 
 on:
-  workflow_dispatch
+  release:
+    types: [published]
 
 jobs:
-  generate_value:
+  print-release-info:
     runs-on: ubuntu-latest
-    outputs:
-      my_value: ${{ steps.store_value.outputs.value }}
     steps:
-      - name: Generate Value
-        id: store_value
-        run: echo "value=Generated Output Value" >> $GITHUB_OUTPUT
-
-      - name: Print to Job Summary
-        run: |
-          echo "### 🔥 Important Output 🔥" >> $GITHUB_STEP_SUMMARY
-          echo "**Value:** ${{ steps.store_value.outputs.value }}" >> $GITHUB_STEP_SUMMARY
-
-  use_value:
-    runs-on: ubuntu-latest
-    needs: generate_value
-    steps:
-      - name: Print Output from Previous Job
-        run: echo "The value is: ${{ needs.generate_value.outputs.my_value }}"
+      - name: Print Release Tag
+        run: echo "Release Tag: ${{ github.event.release.tag_name }}"
+      
+      - name: Print Pre-release Status
+        run: echo "Is Pre-release: ${{ github.event.release.prerelease }}"
+      
+      - name: Print Release Notes
+        run: echo "Release Notes: ${{ github.event.release.body }}"
+       - name: Print Release Notes
+        run: echo "Release Notes: ${{ github.event.release.author.login }}"
