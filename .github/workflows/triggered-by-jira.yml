@@ -1,6 +1,7 @@
 name: Workflow to create Jira change upon release
 run-name: "Release"
 on:
+  workflow_dispatch:
   release:
     types: published
 
@@ -16,5 +17,6 @@ jobs:
           fi
           echo "✅ Valid tag format: $TAG_NAME"
       - name: Print Release Tag
-        run: echo "Release Tag"
+        run: echo "Release Tag" >> $GITHUB_STEP_SUMMARY
+
 
