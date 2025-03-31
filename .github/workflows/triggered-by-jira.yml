@@ -1,7 +1,7 @@
 name: Print Release Details
 
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs: &common_inputs
       ENVIRONMENT:
         required: true
@@ -13,7 +13,7 @@ on:
         required: true
         type: string
 
-  workflow_dispatch:
+  workflow_call:
     inputs: *common_inputs
 
 jobs:
