@@ -1,113 +1,77 @@
-name: Trigger Deployment Workflow
+name: Scoring Service Prod Deployment
+
 on:
-  workflow_dispatch:
-  repository_dispatch:
-    types: jira-event
-   
+    push:
+        tags:
+            - "scoring-service@*.*.*.*"
+    workflow_dispatch:
+        inputs:
+            ENVIRONMENT:
+                description: "Select the environment for deployment"
+                required: true
+                type: environment
+            AWS_REGION:
+                description: "Select the AWS region"
+                required: true
+                type: choice
+                options:
+                    - ap-south-1
+                    - us-east-1
+                    - eu-central-1
+                    - ap-southeast-2
+            QOS_FILE_NAME:
+                description: "Select a valid QoS file"
+                required: true
+                type: choice
+                options:
+                    - qos-app-ap-ap-south-1.json
+                    - qos-app-au-ap-southeast-2.json
+                    - qos-app-eu-eu-central-1.json
+                    - qos-app-us-us-east-1.json
+                    - qos-app-ts-ap-southeast-2.json
+
 jobs:
-  Trigger_Service_Deployment_Workflow:
-    runs-on: ubuntu-latest
+    build-and-deploy-push:
+        if: github.event_name == 'push'
+        name: Build CDK & Deploy (Push)
+        uses: ./.github/workflows/triggered-by-jira.yml
+        strategy:
+            fail-fast: false
+            max-parallel: 5
+            matrix:
+                include:
+                    - stage: app-ap
+                      aws_region: ap-south-1
+                      qos_file_name: qos-app-ap-ap-south-1.json
+                      environment: prod
+                    - stage: app-au
+                      aws_region: ap-southeast-2
+                      qos_file_name: qos-app-au-ap-southeast-2.json
+                      environment: prod
+                    - stage: app-eu
+                      aws_region: eu-central-1
+                      qos_file_name: qos-app-eu-eu-central-1.json
+                      environment: prod
+                    - stage: app-us
+                      aws_region: us-east-1
+                      qos_file_name: qos-app-us-us-east-1.json
+                      environment: prod
+                    - stage: app-ts
+                      aws_region: ap-southeast-2
+                      qos_file_name: qos-app-ts-ap-southeast-2.json
+                      environment: app-ts
+        with:
+            AWS_REGION: ${{ matrix.aws_region }}
+            QOS_FILE_NAME: ${{ matrix.qos_file_name }}
+            ENVIRONMENT: ${{ matrix.environment }}
+        secrets: inherit
 
-    steps:
-
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    
-    - name: Trigger Service Deployment Workflow
-      id: trigger_workflow
-      run: |
-        echo ${{github.event.client_payload.jira_id}}
-        echo ${{github.event.client_payload.tag}}
-        
-        response=$(curl -s -L \
-          --fail \
-          -X POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.new }}" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          https://api.github.com/repos/deepak-mathpal/noti-service/actions/workflows/noti-deploy-workflow.yml/dispatches \
-          -d '{"ref":"main","inputs":{"release_tag":"noti@12344"}}') 
-        if [ $? -ne 0 ]; then 
-          echo "Failed to trigger workflow" 
-          exit 1 
-        fi
-          echo "Triggered workflow response: $response"
-  
-        # Fetch the workflow runs triggered by the dispatch event
-        TARGET_REPO="deepak-mathpal/noti-service"
-        WORKFLOW_ID="noti-deploy-workflow.yml"
-        TOKEN="${{ secrets.new }}"
-  
-        echo "Fetching workflow run details..."
-        sleep 5  # Allow time for the workflow to start
-        run_data=$(curl -s -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer $TOKEN" \
-          "https://api.github.com/repos/$TARGET_REPO/actions/workflows/$WORKFLOW_ID/runs?branch=main&event=workflow_dispatch")
-        
-        run_id=$(echo "$run_data" | jq -r '.workflow_runs | sort_by(.created_at) | reverse | .[0].id')
-        echo "Triggered workflow run_id: $run_id"
-        echo "::set-output name=run_id::$run_id"
-  
-    - name: Wait for Workflow Completion
-      id: wait_workflow
-      run: |
-        TARGET_REPO="deepak-mathpal/noti-service"
-        TOKEN="${{ secrets.new }}"
-        RUN_ID="${{ steps.trigger_workflow.outputs.run_id }}"
-
-        POLL_INTERVAL=10
-        MAX_RETRIES=50
-        retries=0
-        
-        echo "Checking workflow status for run_id: $RUN_ID..."
-        
-        while [ $retries -lt $MAX_RETRIES ]; do
-            response=$(curl -s -H "Accept: application/vnd.github+json" \
-                            -H "Authorization: Bearer $TOKEN" \
-                            "https://api.github.com/repos/$TARGET_REPO/actions/runs/$RUN_ID")
-        
-            if [ -z "$response" ] || [ "$(echo "$response" | jq -r '.status')" == "error" ]; then
-                echo "::error:: Failed to fetch workflow status"
-                echo "workflow_result=fail" >> $GITHUB_ENV
-                break
-            fi
-        
-            status=$(echo "$response" | jq -r '.status')
-            conclusion=$(echo "$response" | jq -r '.conclusion')
-        
-            echo "Status: $status, Conclusion: $conclusion"
-        
-            if [ "$status" == "completed" ]; then
-                if [ "$conclusion" == "success" ]; then
-                    echo "✅ Workflow completed successfully!"
-                    echo "workflow_result=complete" >> $GITHUB_ENV
-                else
-                    echo "⚠️ Workflow failed with conclusion: $conclusion"
-                    echo "workflow_result=fail" >> $GITHUB_ENV
-                fi
-                break
-            fi
-        
-            echo "⏳ Workflow not finished yet. Retrying in $POLL_INTERVAL seconds..."
-            sleep $POLL_INTERVAL
-            retries=$((retries + 1))
-        done
-        
-        if [ $retries -eq $MAX_RETRIES ]; then
-            echo "⚠️ Workflow did not complete within the timeout."
-            echo "workflow_result=timeout" >> $GITHUB_ENV
-        fi
-        
-        echo "✅ Script execution finished. Workflow result: ${{ env.workflow_result }}"
-        
-        
-        
-    - name: update the cr
-      run: |
-        python -m pip install --upgrade pip
-        echo "${{ github.event.client_payload.jira_id }}"
-        echo ${{secrets.jira_user}} 
-        echo ${{secrets.jira_key}}
-        echo "${{ github.event.client_payload.jira_id }}"   
-
-        python python_files/update_jira_ticket.py --jira_user "${{secrets.jira_user}}" --jira_key "${{secrets.jira_key}}" --jira_ticket_id "${{ github.event.client_payload.jira_id }}" --status "${{ env.workflow_result }}" 
+    build-and-deploy-manual:
+        if: github.event_name == 'workflow_dispatch'
+        name: Build CDK & Deploy (Manual)
+        uses: ./.github/workflows/triggered-by-jira.yml
+        with:
+            ENVIRONMENT: ${{ github.event.inputs.ENVIRONMENT }}
+            AWS_REGION: ${{ github.event.inputs.AWS_REGION }}
+            QOS_FILE_NAME: ${{ github.event.inputs.QOS_FILE_NAME }}
+        secrets: inherit
