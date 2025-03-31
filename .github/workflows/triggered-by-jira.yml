@@ -2,7 +2,7 @@ name: Print Release Details
 
 on:
   workflow_dispatch:
-    inputs: &common_inputs
+    inputs: 
       ENVIRONMENT:
         required: true
         type: string
@@ -14,7 +14,16 @@ on:
         type: string
 
   workflow_call:
-    inputs: *common_inputs
+    inputs: 
+      ENVIRONMENT:
+        required: true
+        type: string
+      AWS_REGION:
+        required: true
+        type: string
+      QOS_FILE_NAME:
+        required: true
+        type: string
 
 jobs:
   print-release-info:
