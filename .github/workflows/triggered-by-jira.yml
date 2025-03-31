@@ -18,7 +18,7 @@ jobs:
           echo "✅ Valid tag format: $TAG_NAME"
       - name: Print Release Tag
         run: |
-          id_value = "2"
+          id_value ="2"
           echo $id_value
       
 
