@@ -1,32 +1,23 @@
-name: Print Release Details
-
+name: Workflow to create Jira change upon release
+run-name: "Release"
 on:
-  workflow_dispatch:
-    inputs: 
-      ENVIRONMENT:
-        required: true
-        type: string
-      AWS_REGION:
-        required: true
-        type: string
-      QOS_FILE_NAME:
-        required: true
-        type: string
-
-  workflow_call:
-    inputs: 
-      ENVIRONMENT:
-        required: true
-        type: string
-      AWS_REGION:
-        required: true
-        type: string
-      QOS_FILE_NAME:
-        required: true
-        type: string
+  release:
+    types: published
 
 jobs:
-  print-release-info:
+  check-if-tag-is-correct:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Release Tag
+        run: |
+          if [[ ! "$TAG_NAME" =~ ^scoring-service@[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Invalid tag format: $TAG_NAME"
+            echo "Tag must follow the convention: scoring-service@X.X.X.X (e.g., scoring-service@1.2.3.4)"
+          fi
+          echo "✅ Valid tag format: $TAG_NAME"
+
+
+  tag-print:
     runs-on: ubuntu-latest
     steps:
       - name: Print Release Tag
