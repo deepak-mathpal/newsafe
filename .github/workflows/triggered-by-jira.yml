@@ -15,10 +15,6 @@ jobs:
             echo "Tag must follow the convention: scoring-service@X.X.X.X (e.g., scoring-service@1.2.3.4)"
           fi
           echo "✅ Valid tag format: $TAG_NAME"
-
-
-  tag-print:
-    runs-on: ubuntu-latest
-    steps:
       - name: Print Release Tag
         run: echo "Release Tag"
+
