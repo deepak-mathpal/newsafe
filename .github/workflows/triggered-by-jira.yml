@@ -19,6 +19,7 @@ jobs:
       - name: Print Release Tag
         run: |
           id_value = "2"
+          echo $id_value
           echo "Release_tag:$id_value" >> $GITHUB_STEP_SUMMARY
 
 
