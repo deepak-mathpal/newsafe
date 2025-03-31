@@ -19,7 +19,7 @@ jobs:
       - name: Print Release Tag
         run: |
           id_value="2"
-          echo "Jira Ticket:${id_value}"
+          echo "Jira Ticket:${id_value}" >> $GITHUB_STEP_SUMMARY
       
 
 
