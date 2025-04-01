@@ -9,9 +9,10 @@ jobs:
   check-if-tag-is-correct:
     runs-on: ubuntu-latest
     steps:
-      - name: Print Release Tag
+      - name: check tag
         run: |
-          if [[ ! "$TAG_NAME" =~ ^scoring-service@([0-9]+\.){3}[0-9]+$ ]]; then
+          echo "${{ github.event.release.tag_name }}"
+          if [[ ! "${{ github.event.release.tag_name }}" =~ ^scoring-service@([0-9]+\.){3}[0-9]+$ ]]; then
             echo "❌ Invalid tag format: $TAG_NAME"
             echo "Tag must follow the convention: scoring-service@X.X.X.X (e.g., scoring-service@1.2.3.4)"
           fi
