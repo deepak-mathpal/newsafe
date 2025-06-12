@@ -11,16 +11,7 @@ jobs:
     steps:
       - name: check tag
         run: |
-          echo "${{ github.event.release.tag_name }}"
-          if [[ ! "${{ github.event.release.tag_name }}" =~ ^scoring-service@([0-9]+\.){3}[0-9]+$ ]]; then
-            echo "❌ Invalid tag format: ${{ github.event.release.tag_name }}"
-            echo "Tag must follow the convention: scoring-service@X.X.X.X (e.g., scoring-service@1.2.3.4)"
-          fi
-            echo "✅ Valid tag format: ${{ github.event.release.tag_name }}"
-      - name: Print Release Tag
-        run: |
-          id_value="2"
-          echo "Jira Ticket:${id_value}" >> $GITHUB_STEP_SUMMARY
+          echo ${{ github.ref }}
       
 
 
