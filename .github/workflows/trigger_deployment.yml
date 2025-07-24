@@ -1,77 +1,14 @@
-name: Scoring Service Prod Deployment
+name : Hello world
 
-on:
-    push:
-        tags:
-            - "scoring-service@*.*.*.*"
+on: 
     workflow_dispatch:
-        inputs:
-            ENVIRONMENT:
-                description: "Select the environment for deployment"
-                required: true
-                type: environment
-            AWS_REGION:
-                description: "Select the AWS region"
-                required: true
-                type: choice
-                options:
-                    - ap-south-1
-                    - us-east-1
-                    - eu-central-1
-                    - ap-southeast-2
-            QOS_FILE_NAME:
-                description: "Select a valid QoS file"
-                required: true
-                type: choice
-                options:
-                    - qos-app-ap-ap-south-1.json
-                    - qos-app-au-ap-southeast-2.json
-                    - qos-app-eu-eu-central-1.json
-                    - qos-app-us-us-east-1.json
-                    - qos-app-ts-ap-southeast-2.json
 
 jobs:
-    build-and-deploy-push:
-        if: github.event_name == 'push'
-        name: Build CDK & Deploy (Push)
-        uses: ./.github/workflows/triggered-by-jira.yml
-        strategy:
-            fail-fast: false
-            max-parallel: 5
-            matrix:
-                include:
-                    - stage: app-ap
-                      aws_region: ap-south-1
-                      qos_file_name: qos-app-ap-ap-south-1.json
-                      environment: mm
-                    - stage: app-au
-                      aws_region: ap-southeast-2
-                      qos_file_name: qos-app-au-ap-southeast-2.json
-                      environment: prod
-                    - stage: app-eu
-                      aws_region: eu-central-1
-                      qos_file_name: qos-app-eu-eu-central-1.json
-                      environment: prod
-                    - stage: app-us
-                      aws_region: us-east-1
-                      qos_file_name: qos-app-us-us-east-1.json
-                      environment: prod
-                    - stage: app-ts
-                      aws_region: ap-southeast-2
-                      qos_file_name: qos-app-ts-ap-southeast-2.json
-                      environment: app-ts
-        with:
-            AWS_REGION: ${{ matrix.aws_region }}
-            QOS_FILE_NAME: ${{ matrix.qos_file_name }}
-            ENVIRONMENT: ${{ matrix.environment }}
-        secrets: inherit
+    printing:
+      name: printing my name
+      runs-on: ubuntu-latest
 
-    build-and-deploy-manual:
-        if: github.event_name == 'workflow_dispatch'
-        name: Build CDK & Deploy (Manual)
-        uses: ./.github/workflows/triggered-by-jira.yml
-        with:
-            ENVIRONMENT: ${{ github.event.inputs.ENVIRONMENT }}
-            AWS_REGION: ${{ github.event.inputs.AWS_REGION }}
-            QOS_FILE_NAME: ${{ github.event.inputs.QOS_FILE_NAME }}
-        secrets: inherit
+      steps:
+          - name: print
+            run: |
+              echo "Deepak"
